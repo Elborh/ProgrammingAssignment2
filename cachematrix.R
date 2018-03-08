@@ -1,31 +1,30 @@
 ## This module contains functions for managing
 ## a matrix-like object that can cache its inverse
 
-## Creates a "matrix" object
+## Creates a "matrix" object with a cache-able inverse
 makeCacheMatrix <- function(m = matrix()) {
-    inv <- NULL
-    set <- function(x) {
-        m <<- x
-        inv <<- NULL
+    inverse <- NULL
+    set <- function(new.matrix) {
+        m <<- new.matrix
+        inverse <<- NULL
     }
     get <- function() m
-    set.inv <- function(i) inv <<- i
-    get.inv <- function() inv
+    set.inverse <- function(new.inverse) inverse <<- new.inverse
+    get.inverse <- function() inverse
     list(set = set, get = get,
-         set.inv = set.inv,
-         get.inv = get.inv)
+         set.inverse = set.inverse,
+         get.inverse = get.inverse)
 }
 
 
 ## Returns inversed matrix, preferably from cache
 cacheSolve <- function(x, ...) {
-    inv <- x$get.inv()
-    if(!is.null(inv)) {
+    inverse <- x$get.inverse()
+    if(!is.null(inverse)) {
         message("getting cached data")
-        return(inv)
+        return(inverse)
     }
-    m <- x$get()
-    inv <- solve(m, ...)
-    x$set.inv(inv)
-    inv    
+    new.inverse <- solve(x$get(), ...)
+    x$set.inverse(new.inverse)
+    new.inverse    
 }
